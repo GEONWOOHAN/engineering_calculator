@@ -1,0 +1,29 @@
+input {
+    text-align: right;
+}
+
+#field {
+    letter-spacing: 3px;
+}
+
+ul {
+    padding: 0;
+}
+
+li {
+    list-style-type: none;
+    justify-content: center;
+    text-align: right;
+    margin-bottom: 5px;
+    border: 1px solid black;
+    height: 25px;
+    width: 150px;
+}
+
+h4 {
+    margin: 0;
+    font-weight: 500;
+    font-size: 7;
+    height: inherit;
+    width: inherit;
+}
