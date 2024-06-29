@@ -12,6 +12,18 @@ const recordClearButton = document.getElementById("recordClear");
 const deleteAllButton = document.getElementById("deleteAll");
 const leftParenthesisButton = document.getElementById("leftParenthesis");
 const rightParenthesisButton = document.getElementById("rightParenthesis");
+const recordShowButton = document.getElementById("recordShow");
+const numberOneButton = document.getElementById("numberOne");
+const numberTwoButton = document.getElementById("numberTwo");
+const numberThreeButton = document.getElementById("numberThree");
+const numberFourButton = document.getElementById("numberFour");
+const numberFiveButton = document.getElementById("numberFive");
+const numberSixButton = document.getElementById("numberSix");
+const numberSevenButton = document.getElementById("numberSeven");
+const numberEightButton = document.getElementById("numberEight");
+const numberNineButton = document.getElementById("numberNine");
+const numberZeroButton = document.getElementById("numberZero");
+
 let countRightParenthesis = 0;
 
 function calculator(operator, a, b) {
@@ -19,7 +31,7 @@ function calculator(operator, a, b) {
         return Number(a) + Number(b);
     } else if (operator == '-') {
         return Number(a) - Number(b);
-    } else if (operator == 'x') {
+    } else if (operator == '×') {
         return Number(a) * Number(b);
     } else if (operator == '/') {
         return Number(a) / Number(b);
@@ -29,7 +41,7 @@ function calculator(operator, a, b) {
 }
 
 function isSymbol(symbol) {
-    return ['+', '-', 'x', '/', '^'].includes(symbol);
+    return ['+', '-', '×', '/', '^'].includes(symbol);
 }
 
 function symbols(symbol) {
@@ -58,7 +70,7 @@ function minusSymbol(event) {
 
 function multiplySymbol(event) {
     event.preventDefault();
-    symbols('x');
+    symbols('×');
 }
 
 function divideSymbol(event) {
@@ -97,6 +109,96 @@ function rightParenthesisBtn(event) {
     field.focus();
 }
 
+function numberOneBtn(event) {
+    event.preventDefault();
+    if (field.value == '0') {
+        field.value = field.value.slice(0, -1) + '1';
+    } else {
+        field.value += '1';
+    }
+}
+
+function numberTwoBtn(event) {
+    event.preventDefault();
+    if (field.value == '0') {
+        field.value = field.value.slice(0, -1) + '2';
+    } else {
+        field.value += '2';
+    }
+}
+
+function numberThreeBtn(event) {
+    event.preventDefault();
+    if (field.value == '0') {
+        field.value = field.value.slice(0, -1) + '3';
+    } else {
+        field.value += '3';
+    }
+}
+
+function numberFourBtn(event) {
+    event.preventDefault();
+    if (field.value == '0') {
+        field.value = field.value.slice(0, -1) + '4';
+    } else {
+        field.value += '4';
+    }
+}
+
+function numberFiveBtn(event) {
+    event.preventDefault();
+    if (field.value == '0') {
+        field.value = field.value.slice(0, -1) + '5';
+    } else {
+        field.value += '5';
+    }
+}
+
+function numberSixBtn(event) {
+    event.preventDefault();
+    if (field.value == '0') {
+        field.value = field.value.slice(0, -1) + '6';
+    } else {
+        field.value += '6';
+    }
+}
+
+function numberSevenBtn(event) {
+    event.preventDefault();
+    if (field.value == '0') {
+        field.value = field.value.slice(0, -1) + '7';
+    } else {
+        field.value += '7';
+    }
+}
+
+function numberEightBtn(event) {
+    event.preventDefault();
+    if (field.value == '0') {
+        field.value = field.value.slice(0, -1) + '8';
+    } else {
+        field.value += '8';
+    }
+}
+
+function numberNineBtn(event) {
+    event.preventDefault();
+    if (field.value == '0') {
+        field.value = field.value.slice(0, -1) + '9';
+    } else {
+        field.value += '9';
+    }
+}
+
+function numberZeroBtn(event) {
+    event.preventDefault();
+    if (field.value == '0') {
+        field.value = field.value.slice(0, -1) + '0';
+    } else {
+        field.value += '0';
+    }
+}
+
 function deleteBtn(event) {
     event.preventDefault();
     if (field.value.slice(0, -1) == '') {
@@ -116,6 +218,12 @@ function equalSymbol(event) {
     let equation = field.value;
     if (isSymbol(equation.slice(-1))) {
         equation = equation.slice(0, -1);
+    }
+    if (countRightParenthesis > 0) {
+        for (i = 0; i < countRightParenthesis + 1; i++) {
+            equation = equation + ')';
+            countRightParenthesis -= 1;
+        }
     }
     let result = calculation(equation);
     formulaField.value = `ANS = ${result}`;
@@ -165,14 +273,13 @@ function calculation(equation) {
         startIndex = equation.indexOf('(') + 1;
         lastIndex = equation.lastIndexOf(')');
         parenthesisEquation = equation.slice(startIndex, lastIndex);
-        console.log(parenthesisEquation);
         result = equation.slice(0, startIndex - 1) + calculation(parenthesisEquation) + equation.slice(lastIndex, -1);
-        console.log(result);
+        result = calculation(result);
     } else {
         let a = '';
         let b = '';
         let operator = '';
-        let multiplyAndDivide = symbols.filter((symbol) => symbol == 'x' || symbol == '/');
+        let multiplyAndDivide = symbols.filter((symbol) => symbol == '×' || symbol == '/');
         for (i = 0; i < multiplyAndDivide.length; i++) {
             operator = multiplyAndDivide[i];
             a = nums[symbols.indexOf(multiplyAndDivide[i])];
@@ -227,10 +334,10 @@ function keyControl(event) {
         }
     } else if (key == '*') {
         event.preventDefault();
-        if (field.value.slice(-1) == '0' || field.value.slice(-1) == 'x') {
+        if (field.value.slice(-1) == '0' || field.value.slice(-1) == '×') {
             return;
         } else {
-            field.value += 'x';
+            field.value += '×';
         }
     } else if (!isNaN(key)) {
         if (field.value == '0') {
@@ -254,8 +361,13 @@ function keyControl(event) {
     field.focus();
 }
 
+function recordShow(event) {
+    event.preventDefault();
+    record.classList.toggle("hidden");
+}
 
 field.addEventListener("keydown", keyControl);
+recordShowButton.addEventListener("click", recordShow);
 addButton.addEventListener("click", addSymbol);
 minusButton.addEventListener("click", minusSymbol);
 multiplyButton.addEventListener("click", multiplySymbol);
@@ -267,3 +379,13 @@ rightParenthesisButton.addEventListener("click", rightParenthesisBtn);
 deleteButton.addEventListener("click", deleteBtn);
 deleteAllButton.addEventListener("click", deleteAllBtn);
 recordClearButton.addEventListener("click", recordClear);
+numberOneButton.addEventListener("click", numberOneBtn);
+numberTwoButton.addEventListener("click", numberTwoBtn);
+numberThreeButton.addEventListener("click", numberThreeBtn);
+numberFourButton.addEventListener("click", numberFourBtn);
+numberFiveButton.addEventListener("click", numberFiveBtn);
+numberSixButton.addEventListener("click", numberSixBtn);
+numberSevenButton.addEventListener("click", numberSevenBtn);
+numberEightButton.addEventListener("click", numberEightBtn);
+numberNineButton.addEventListener("click", numberNineBtn);
+numberZeroButton.addEventListener("click", numberZeroBtn);
