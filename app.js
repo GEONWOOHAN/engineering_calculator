@@ -295,7 +295,7 @@ function recordClear(event) {
 function recordRecovery(event) {
     event.preventDefault();
     const listSelected = event.target.id;
-    formulaField.value = JSON.parse(localStorage.getItem(listSelected))[0];
+    formulaField.value = `ANS = ${JSON.parse(localStorage.getItem(listSelected))[0]}`;
     field.value = JSON.parse(localStorage.getItem(listSelected))[1];
 }
 
