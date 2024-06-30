@@ -4,6 +4,7 @@ const minusButton = document.getElementById("minus");
 const multiplyButton = document.getElementById("multiply");
 const divideButton = document.getElementById("divide");
 const powerButton = document.getElementById("power");
+const remainderButton = document.getElementById("remainder");
 const equalButton = document.getElementById("equalSign");
 const formulaField = document.getElementById("formula");
 const record = document.getElementById("record");
@@ -23,6 +24,7 @@ const numberSevenButton = document.getElementById("numberSeven");
 const numberEightButton = document.getElementById("numberEight");
 const numberNineButton = document.getElementById("numberNine");
 const numberZeroButton = document.getElementById("numberZero");
+const dotButton = document.getElementById("dot");
 
 let countRightParenthesis = 0;
 
@@ -37,11 +39,13 @@ function calculator(operator, a, b) {
         return Number(a) / Number(b);
     } else if (operator == '^') {
         return Number(a) ** Number(b);
+    } else if (operator == '%') {
+        return Number(a) % Number(b);
     }
 }
 
 function isSymbol(symbol) {
-    return ['+', '-', '×', '/', '^'].includes(symbol);
+    return ['+', '-', '×', '/', '^', '%'].includes(symbol);
 }
 
 function symbols(symbol) {
@@ -49,7 +53,8 @@ function symbols(symbol) {
 
     if (isSymbol(currentField.slice(-1))) {
         field.value = currentField.slice(0, -1) + symbol;
-    } else if (currentField == '') {
+    } else if (currentField == '' || currentField.slice(-1) == '.') {
+        field.focus();
         return;
     } else {
         field.value += symbol;
@@ -83,12 +88,21 @@ function powerSymbol(event) {
     symbols('^');
 }
 
+function remainderSymbol(event) {
+    event.preventDefault();
+    symbols('%');
+}
+
 function leftParenthesisBtn(event) {
     event.preventDefault();
     if (isSymbol(field.value.slice(-1)) || field.value.slice(-1) == '(') {
         field.value += '(';
         countRightParenthesis += 1;
+    } else if (field.value.slice(0, -1) == '') {
+        field.value = '(';
+        countRightParenthesis += 1;
     } else {
+        field.focus();
         return;
     }
 
@@ -102,6 +116,7 @@ function rightParenthesisBtn(event) {
             field.value += ')';
             countRightParenthesis -= 1;
         } else {
+            field.focus();
             return;
         }
     }
@@ -116,6 +131,7 @@ function numberOneBtn(event) {
     } else {
         field.value += '1';
     }
+    field.focus();
 }
 
 function numberTwoBtn(event) {
@@ -125,6 +141,7 @@ function numberTwoBtn(event) {
     } else {
         field.value += '2';
     }
+    field.focus();
 }
 
 function numberThreeBtn(event) {
@@ -134,6 +151,7 @@ function numberThreeBtn(event) {
     } else {
         field.value += '3';
     }
+    field.focus();
 }
 
 function numberFourBtn(event) {
@@ -143,6 +161,7 @@ function numberFourBtn(event) {
     } else {
         field.value += '4';
     }
+    field.focus();
 }
 
 function numberFiveBtn(event) {
@@ -152,6 +171,7 @@ function numberFiveBtn(event) {
     } else {
         field.value += '5';
     }
+    field.focus();
 }
 
 function numberSixBtn(event) {
@@ -161,6 +181,7 @@ function numberSixBtn(event) {
     } else {
         field.value += '6';
     }
+    field.focus();
 }
 
 function numberSevenBtn(event) {
@@ -170,6 +191,7 @@ function numberSevenBtn(event) {
     } else {
         field.value += '7';
     }
+    field.focus();
 }
 
 function numberEightBtn(event) {
@@ -179,6 +201,7 @@ function numberEightBtn(event) {
     } else {
         field.value += '8';
     }
+    field.focus();
 }
 
 function numberNineBtn(event) {
@@ -188,6 +211,7 @@ function numberNineBtn(event) {
     } else {
         field.value += '9';
     }
+    field.focus();
 }
 
 function numberZeroBtn(event) {
@@ -197,6 +221,18 @@ function numberZeroBtn(event) {
     } else {
         field.value += '0';
     }
+    field.focus();
+}
+
+function dotBtn(event) {
+    event.preventDefault();
+    if (!isNaN(field.value.slice(-1))) {
+        field.value += '.';
+    } else {
+        field.focus();
+        return;
+    }
+    field.focus();
 }
 
 function deleteBtn(event) {
@@ -206,11 +242,13 @@ function deleteBtn(event) {
     } else {
         field.value = field.value.slice(0, -1);
     }
+    field.focus();
 }
 
 function deleteAllBtn(event) {
     event.preventDefault();
     field.value = "0";
+    field.focus();
 }
 
 function equalSymbol(event) {
@@ -262,8 +300,9 @@ function recordRecovery(event) {
 }
 
 function calculation(equation) {
-    let nums = equation.match(/\d+/g);
-    let symbols = equation.match(/\D+?/g);
+    let nums = equation.match(/\d*\.?\d+/g);
+    nums = nums.map(num => num.replace(/^0+(\d)/, '$1'));
+    let symbols = equation.match(/[^0-9.]+/g);
     let result = '';
     let startIndex = '';
     let lastIndex = '';
@@ -279,7 +318,7 @@ function calculation(equation) {
         let a = '';
         let b = '';
         let operator = '';
-        let multiplyAndDivide = symbols.filter((symbol) => symbol == '×' || symbol == '/');
+        let multiplyAndDivide = symbols.filter((symbol) => symbol == '×' || symbol == '/' || symbol == '%');
         for (i = 0; i < multiplyAndDivide.length; i++) {
             operator = multiplyAndDivide[i];
             a = nums[symbols.indexOf(multiplyAndDivide[i])];
@@ -313,6 +352,9 @@ function keyControl(event) {
         if (isSymbol(field.value.slice(-1)) || field.value.slice(-1) == '(') {
             field.value += '(';
             countRightParenthesis += 1;
+        } else if (field.value.slice(0, -1) == '') {
+            field.value = '(';
+            countRightParenthesis += 1;
         } else {
             return;
         }
@@ -326,18 +368,28 @@ function keyControl(event) {
                 return;
             }
         }
+    } else if (key == '.') {
+        event.preventDefault();
+        if (!isNaN(field.value.slice(-1))) {
+            field.value += '.';
+        } else {
+            field.focus();
+            return;
+        }
+        field.focus();
+    } else if (key == '*') {
+        event.preventDefault();
+        if (isSymbol(field.value.slice(-1))) {
+            field.value = field.value.slice(0, -1) + '×';
+            return;
+        } else {
+            field.value += '×';
+        }
     } else if (isSymbol(key)) {
         symbols(key);
         field.value = field.value.slice(0, -1);
         if (field.value == '') {
             event.preventDefault();
-        }
-    } else if (key == '*') {
-        event.preventDefault();
-        if (field.value.slice(-1) == '0' || field.value.slice(-1) == '×') {
-            return;
-        } else {
-            field.value += '×';
         }
     } else if (!isNaN(key)) {
         if (field.value == '0') {
@@ -373,6 +425,7 @@ minusButton.addEventListener("click", minusSymbol);
 multiplyButton.addEventListener("click", multiplySymbol);
 divideButton.addEventListener("click", divideSymbol);
 powerButton.addEventListener("click", powerSymbol);
+remainderButton.addEventListener("click", remainderSymbol);
 equalButton.addEventListener("click", equalSymbol);
 leftParenthesisButton.addEventListener("click", leftParenthesisBtn);
 rightParenthesisButton.addEventListener("click", rightParenthesisBtn);
@@ -389,3 +442,4 @@ numberSevenButton.addEventListener("click", numberSevenBtn);
 numberEightButton.addEventListener("click", numberEightBtn);
 numberNineButton.addEventListener("click", numberNineBtn);
 numberZeroButton.addEventListener("click", numberZeroBtn);
+dotButton.addEventListener("click", dotBtn);
